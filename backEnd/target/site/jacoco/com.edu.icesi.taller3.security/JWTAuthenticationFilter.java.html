@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JWTAuthenticationFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-crud-jpa-h2</a> &gt; <a href="index.source.html" class="el_package">com.edu.icesi.taller3.security</a> &gt; <span class="el_source">JWTAuthenticationFilter.java</span></div><h1>JWTAuthenticationFilter.java</h1><pre class="source lang-java linenums">package com.edu.icesi.taller3.security;
+
+import java.io.IOException;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.lang.Collections;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+<span class="fc" id="L18">public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {</span>
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+<span class="nc" id="L23">        AuthCredentials credentials = new AuthCredentials();</span>
+
+        try {
+<span class="nc" id="L26">            credentials = new ObjectMapper().readValue(request.getInputStream(), AuthCredentials.class);</span>
+
+<span class="nc" id="L28">        } catch (Exception e) {</span>
+
+<span class="nc" id="L30">        }</span>
+<span class="nc" id="L31">        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(</span>
+<span class="nc" id="L32">                credentials.getUsername(), credentials.getPassword(), Collections.emptyList());</span>
+
+<span class="nc" id="L34">        return getAuthenticationManager().authenticate(authToken);</span>
+    }
+
+    @Override
+    public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            FilterChain chain,
+            Authentication authResult) throws IOException, ServletException {
+<span class="nc" id="L41">        UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();</span>
+<span class="nc" id="L42">        String token = TokenUtils.createToken(userDetails.getUsername());</span>
+
+<span class="nc" id="L44">        response.addHeader(&quot;Authorization&quot;, &quot;Bearer &quot; + token);</span>
+<span class="nc" id="L45">        response.getWriter().flush();</span>
+<span class="nc" id="L46">        System.out.println(response.getHeader(&quot;Authorization&quot;));</span>
+<span class="nc" id="L47">        super.successfulAuthentication(request, response, chain, authResult);</span>
+<span class="nc" id="L48">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

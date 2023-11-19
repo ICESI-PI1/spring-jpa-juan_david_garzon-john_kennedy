@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthorServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-crud-jpa-h2</a> &gt; <a href="index.source.html" class="el_package">com.edu.icesi.taller3.services.impl</a> &gt; <span class="el_source">AuthorServiceImpl.java</span></div><h1>AuthorServiceImpl.java</h1><pre class="source lang-java linenums">package com.edu.icesi.taller3.services.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.edu.icesi.taller3.persistence.models.Author;
+import com.edu.icesi.taller3.persistence.repositories.AuthorRepository;
+import com.edu.icesi.taller3.services.IAuthorService;
+
+import java.util.Optional;
+
+@Service
+public class AuthorServiceImpl implements IAuthorService {
+    @Autowired
+    private AuthorRepository authorRepository;
+
+<span class="fc" id="L17">    public AuthorServiceImpl(AuthorRepository authorRepository) {</span>
+<span class="fc" id="L18">        this.authorRepository = authorRepository;</span>
+<span class="fc" id="L19">    }</span>
+
+    @Override
+    public Iterable&lt;Author&gt; getAllAuthors() {
+<span class="fc" id="L23">        return authorRepository.findAll();</span>
+    }
+
+    @Override
+    public Optional&lt;Author&gt; getAuthorById(Long id) {
+<span class="fc" id="L28">        return authorRepository.findById(id);</span>
+    }
+
+    @Override
+    public Author createAuthor(Author author) {
+<span class="fc" id="L33">        return authorRepository.save(author);</span>
+    }
+
+    @Override
+    public Optional&lt;Author&gt; updateAuthor(Long id, Author updatedAuthor) {
+<span class="fc" id="L38">        Optional&lt;Author&gt; existingAuthor = authorRepository.findById(id);</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (existingAuthor.isPresent()) {</span>
+<span class="fc" id="L40">            updatedAuthor.setId(id);</span>
+<span class="fc" id="L41">            return Optional.of(authorRepository.save(updatedAuthor));</span>
+        }
+<span class="nc" id="L43">        return Optional.empty();</span>
+    }
+
+    @Override
+    public boolean deleteAuthor(Long id) {
+<span class="fc" id="L48">        Optional&lt;Author&gt; authorToDelete = authorRepository.findById(id);</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        if (authorToDelete.isPresent()) {</span>
+<span class="fc" id="L50">            authorRepository.deleteById(id);</span>
+<span class="fc" id="L51">            return true;</span>
+        }
+<span class="nc" id="L53">        return false;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BookServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-crud-jpa-h2</a> &gt; <a href="index.source.html" class="el_package">com.edu.icesi.taller3.services.impl</a> &gt; <span class="el_source">BookServiceImpl.java</span></div><h1>BookServiceImpl.java</h1><pre class="source lang-java linenums">package com.edu.icesi.taller3.services.impl;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.edu.icesi.taller3.persistence.models.Author;
+import com.edu.icesi.taller3.persistence.models.Book;
+import com.edu.icesi.taller3.persistence.repositories.BookRepository;
+import com.edu.icesi.taller3.services.IBookService;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class BookServiceImpl implements IBookService {
+    @Autowired
+    private BookRepository bookRepository;
+
+<span class="fc" id="L20">    public BookServiceImpl(BookRepository bookRepository) {</span>
+<span class="fc" id="L21">        this.bookRepository = bookRepository;</span>
+<span class="fc" id="L22">    }</span>
+
+    @Override
+    public List&lt;Book&gt; getAllBooks() {
+<span class="fc" id="L26">        return bookRepository.findAll();</span>
+    }
+
+    @Override
+    public Optional&lt;Book&gt; getBookById(Long id) {
+<span class="fc" id="L31">        return bookRepository.findById(id);</span>
+    }
+
+    @Override
+    public Book createBook(Book book) {
+<span class="fc" id="L36">        return bookRepository.save(book);</span>
+    }
+
+    @Override
+    public Optional&lt;Book&gt; updateBook(Long id, Book updatedBook) {
+<span class="fc" id="L41">        Optional&lt;Book&gt; existingBook = bookRepository.findById(id);</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if (existingBook.isPresent()) {</span>
+<span class="fc" id="L43">            updatedBook.setId(id);</span>
+<span class="fc" id="L44">            return Optional.of(bookRepository.save(updatedBook));</span>
+        }
+<span class="nc" id="L46">        return Optional.empty();</span>
+    }
+
+    @Override
+    public boolean deleteBook(Long id) {
+<span class="fc" id="L51">        Optional&lt;Book&gt; bookToDelete = bookRepository.findById(id);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (bookToDelete.isPresent()) {</span>
+<span class="fc" id="L53">            bookRepository.deleteById(id);</span>
+<span class="fc" id="L54">            return true;</span>
+        }
+<span class="nc" id="L56">        return false;</span>
+    }
+
+    @Override
+    public List&lt;Book&gt; findByAuthor(Author author) {
+<span class="fc" id="L61">        return bookRepository.findByAuthor(author);</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataBaseSeeder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-crud-jpa-h2</a> &gt; <a href="index.source.html" class="el_package">com.edu.icesi.taller3.seeder</a> &gt; <span class="el_source">DataBaseSeeder.java</span></div><h1>DataBaseSeeder.java</h1><pre class="source lang-java linenums">package com.edu.icesi.taller3.seeder;
+
+import java.util.List;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+import java.time.LocalDate;
+import com.edu.icesi.taller3.persistence.models.Author;
+import com.edu.icesi.taller3.persistence.models.Book;
+import com.edu.icesi.taller3.persistence.models.Usuario;
+import com.edu.icesi.taller3.persistence.repositories.AuthorRepository;
+import com.edu.icesi.taller3.persistence.repositories.BookRepository;
+import com.edu.icesi.taller3.services.impl.UserService;
+
+import org.slf4j.Logger;
+
+@Component
+public class DataBaseSeeder {
+<span class="fc" id="L21">    private Logger logger = LoggerFactory.getLogger(DataBaseSeeder.class);</span>
+    @Autowired
+    public AuthorRepository authorRepository;
+    @Autowired
+    public BookRepository bookRepository;
+    @Autowired
+    public UserService userService;
+
+<span class="fc" id="L29">    public DataBaseSeeder(AuthorRepository authorRepository, BookRepository bookRepository) {</span>
+<span class="fc" id="L30">        this.authorRepository = authorRepository;</span>
+<span class="fc" id="L31">        this.bookRepository = bookRepository;</span>
+<span class="fc" id="L32">    }</span>
+
+    @EventListener
+    public void seed(ContextRefreshedEvent event) {
+<span class="fc" id="L36">        seedUser();</span>
+<span class="fc" id="L37">        seedAuthors();</span>
+<span class="fc" id="L38">        seedBooks();</span>
+<span class="fc" id="L39">    }</span>
+
+    public void seedUser() {
+<span class="fc" id="L42">        List&lt;Usuario&gt; users = userService.findAll();</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (users.isEmpty()) {</span>
+<span class="fc" id="L44">            Usuario user = new Usuario(&quot;admin&quot;, &quot;admin&quot;);</span>
+<span class="fc" id="L45">            userService.create(user);</span>
+<span class="fc" id="L46">        } else {</span>
+<span class="nc" id="L47">            logger.trace(&quot;User Seeding Not Required&quot;);</span>
+<span class="nc" id="L48">            return;</span>
+        }
+
+<span class="fc" id="L51">    }</span>
+
+    public void seedAuthors() {
+<span class="fc" id="L54">        List&lt;Author&gt; authors = authorRepository.findAll();</span>
+<span class="pc bpc" id="L55" title="1 of 2 branches missed.">        if (authors.isEmpty()) {</span>
+<span class="fc" id="L56">            Author author1 = new Author(1L, &quot;A&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L57">            Author author2 = new Author(2L, &quot;B&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L58">            Author author3 = new Author(3L, &quot;C&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L59">            Author author4 = new Author(4L, &quot;D&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L60">            authorRepository.save(author1);</span>
+<span class="fc" id="L61">            authorRepository.save(author2);</span>
+<span class="fc" id="L62">            authorRepository.save(author3);</span>
+<span class="fc" id="L63">            authorRepository.save(author4);</span>
+
+<span class="fc" id="L65">        } else {</span>
+<span class="nc" id="L66">            logger.trace(&quot;Author Seeding Not Required&quot;);</span>
+        }
+
+<span class="fc" id="L69">    }</span>
+
+    public void seedBooks() {
+<span class="fc" id="L72">        List&lt;Book&gt; books = bookRepository.findAll();</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (books.isEmpty()) {</span>
+<span class="fc" id="L74">            Author author1 = new Author(1L, &quot;A&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L75">            Author author2 = new Author(2L, &quot;B&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L76">            Author author3 = new Author(3L, &quot;C&quot;, &quot;Colombia&quot;);</span>
+<span class="fc" id="L77">            Book book1 = new Book(1L, &quot;primero&quot;, LocalDate.now(), author1);</span>
+<span class="fc" id="L78">            Book book2 = new Book(2L, &quot;Segundo&quot;, LocalDate.now(), author1);</span>
+<span class="fc" id="L79">            Book book3 = new Book(3L, &quot;Tercero&quot;, LocalDate.now(), author2);</span>
+<span class="fc" id="L80">            Book book4 = new Book(4L, &quot;Cuarto&quot;, LocalDate.now(), author3);</span>
+<span class="fc" id="L81">            bookRepository.save(book1);</span>
+<span class="fc" id="L82">            bookRepository.save(book2);</span>
+<span class="fc" id="L83">            bookRepository.save(book3);</span>
+<span class="fc" id="L84">            bookRepository.save(book4);</span>
+
+<span class="fc" id="L86">        } else {</span>
+<span class="nc" id="L87">            logger.trace(&quot;Books Seeding Not Required&quot;);</span>
+        }
+<span class="fc" id="L89">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
